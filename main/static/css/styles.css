@@ -7,7 +7,7 @@ body {
 
 /* Стили для шапки */
 header {
-    background-color: #343a40; /* Темно-серый фон шапки */
+    background-color: #6b7e91; /* Темно-серый фон шапки */
     color: white; /* Белый текст */
     display: flex;
     justify-content: space-between;
@@ -66,7 +66,7 @@ header .btn-outline-primary {
 
 header .btn-outline-primary:hover {
     background-color: white;
-    color: #343a40;
+    color: #2d363e;
 }
 
 header .btn-primary {
@@ -85,7 +85,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background-color: #343a40; /* Dark background */
+    background-color: #6b7e91; /* Dark background */
     color: #ffffff; /* White text color */
 }
 
@@ -101,6 +101,23 @@ footer a {
 
 footer span {
     margin-left: 0.5rem;
+}
+
+footer .nav {
+    list-style: none;
+    display: flex; /* Гарантирует, что элементы li будут в ряд */
+    padding: 0;
+    margin: 0;
+    justify-content: flex-end; /* Выравнивание иконок по правому краю */
+}
+
+footer .nav li {
+    margin: 0 10px; /* Добавляет горизонтальный отступ между иконками */
+}
+
+footer .nav li a {
+    color: #ffffff; /* Цвет иконок */
+    font-size: 24px; /* Размер иконок */
 }
 
 /* Social media icons */
