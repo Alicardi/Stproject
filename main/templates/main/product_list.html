@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог продуктов</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/product.css' %}?v=1.1">
+</head>
+<body>
+    <header>
+        <!-- Ваша шапка сайта -->
+    </header>
+
+    <main>
+        <section class="product-section">
+            <h1>Каталог кремов для загара</h1>
+            <div class="product-list">
+                {% for product in products %}
+                <div class="product-item">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    <h2 class="product-title">{{ product.name }}</h2>
+                    <p class="product-description">
+                        {{ product.description|truncatewords:20 }} <!-- Обрезать текст после 20 слов -->
+                        <a href="#" class="toggle-description">Показать больше</a>
+                    </p>
+                    
+                    <p class="product-price">Цена: {{ product.price }} руб.</p>
+                    <!-- Кнопка добавления в корзину или покупки (если необходимо) -->
+                    <button class="product-buy-button">Купить</button>
+                </div>
+                {% empty %}
+                <p>Продукты не найдены.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Ваш футер -->
+    </footer>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.toggle-description').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Найти и переключить видимость полного описания
+                var fullDescription = this.previousElementSibling; // предполагается, что полное описание находится перед ссылкой
+                fullDescription.style.display = fullDescription.style.display === 'none' ? 'block' : 'none';
+                this.textContent = this.textContent === 'Показать больше' ? 'Скрыть' : 'Показать больше';
+            });
+        });
+    </script>
+    <!-- Ваши скрипты -->
+</body>
+</html>

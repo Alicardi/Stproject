@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Солярий</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
+    <!-- Link Swiper's CSS -->
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2vEFF1dzIBu5qhZo4YI9L0GBYF/uYYlEavtYlbJa8fY6RyW3taMr8Jm3R7dBSY4ySv7naaGA=="
+    crossorigin=""/>
+
+</head>
+<body>
+  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <div class="col-md-3 mb-2 mb-md-0">
+      <<a href="/" class="d-inline-flex align-items-center text-decoration-none">
+        <img src="{% static 'img/st_logo.png' %}" width="60" height="32" alt="Company Logo">
+      </a>      
+    </div>
+
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+      <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+      <li><a href="products/" class="nav-link px-2">Product</a></li>
+      <li><a href="#" class="nav-link px-2">Account</a></li>
+    </ul>
+
+    <div class="col-md-3 text-end">
+      <button type="button" class="btn btn-outline-primary me-2">Login</button>
+      <button type="button" class="btn btn-primary">Sign-up</button>
+    </div>
+  </header>
+
+    <main>
+        <section id="about">
+            <h2>О нас</h2>
+            <p>Здесь информация о солярии...</p>
+        </section>
+
+                <!-- Swiper -->
+        <div class="swiper-container">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_1.jpg' %}" alt="Image description"></div>
+                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_2.jpg' %}" alt="Image description"></div>
+                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_3.jpg' %}" alt="Image description"></div>
+                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_4.jpg' %}" alt="Image description"></div>
+                <!-- Добавьте больше слайдов по аналогии -->
+            </div>
+            <!-- If we need pagination -->
+            <!-- <div class="swiper-pagination"></div> -->
+            
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+
+        <div id="map"></div>
+
+    </main>
+
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <div class="col-md-4 d-flex align-items-center">
+        <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+          <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+        <span class="mb-3 mb-md-0 text-body-secondary">© 2024 Company, Inc</span>
+      </div>
+  
+      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
+        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
+        <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
+      </ul>
+    </footer>
+    <script>
+        var mySwiper = new Swiper('.swiper-container', {
+          // Optional parameters
+          direction: 'horizontal',
+          loop: true,
+          centeredSlides: true, // Это центрирует активный слайд
+          slidesPerView: 3, // Показывать по 3 слайда за раз
+          spaceBetween: 30, // Расстояние между слайдами
+          
+          // Navigation arrows
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          
+          // And if we need scrollbar
+          scrollbar: {
+            el: '.swiper-scrollbar',
+          },
+        });
+      </script>      
+      <script>
+        function initMap() {
+          var locations = [
+            {lat: 45.023131, lng: 39.049846},
+            {lat: 45.032419, lng: 38.918701}
+          ];
+      
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: locations[0]
+          });
+      
+          locations.forEach(function(location) {
+            var marker = new google.maps.Marker({
+              position: location,
+              map: map
+            });
+          });
+        }
+      </script>
+      <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKKMxh13maqRowYFVJvpZPaXLpec99YP0&callback=initMap">
+      </script>      
+</body>
+</html>
