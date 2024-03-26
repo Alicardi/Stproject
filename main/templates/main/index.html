@@ -22,24 +22,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <div class="col-md-3 mb-2 mb-md-0">
-      <a href="/" class="d-inline-flex align-items-center text-decoration-none">
-        <img src="{% static 'img/st_logo.png' %}" width="60" height="32" alt="Company Logo">
-      </a>      
-    </div>
-
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
-      <li><a href="products/" class="nav-link px-2">Product</a></li>
-      <li><a href="#" class="nav-link px-2">Account</a></li>
-    </ul>
-
-    <div class="col-md-3 text-end">
-      <button type="button" class="btn btn-outline-primary me-2">Login</button>
-      <button type="button" class="btn btn-primary">Sign-up</button>
-    </div>
-  </header>
+  {% include 'main/header.html' %}
 
     <main>
         <section id="about">
@@ -70,20 +53,7 @@
 
     </main>
 
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-      <div class="col-md-4 d-flex align-items-center">
-        <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
-          <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
-        </a>
-        <span class="mb-3 mb-md-0 text-body-secondary">© 2024 Company, Inc</span>
-      </div>
-  
-      <ul class="nav justify-content-end list-unstyled d-flex">
-        <li class="ms-3"><a class="text-body-secondary" href="https://www.instagram.com/yourusername" target="_blank"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
-        <li class="ms-3"><a class="text-body-secondary" href="https://wa.me/yourphonenumber" target="_blank"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
-        <li class="ms-3"><a class="text-body-secondary" href="https://t.me/yourusername" target="_blank"><i class="fab fa-telegram-plane" aria-hidden="true"></i></a></li>
-      </ul>      
-    </footer>
+    {% include 'main/footer.html' %}
     <script>
         var mySwiper = new Swiper('.swiper-container', {
           // Optional parameters

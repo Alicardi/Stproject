@@ -5,16 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог продуктов</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/product.css' %}?v=1.1">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
 </head>
 <body>
-    <header>
-        <!-- Ваша шапка сайта -->
-    </header>
+    {% include 'main/header.html' %}
 
     <main>
         <section class="product-section">
             <h1>Каталог кремов для загара</h1>
+            <div class="filters">
+                <select onchange="window.location.href=this.value">
+                    <option value="?">Все категории</option>
+                    {% for category in categories %}
+                    <option value="?category={{ category.name }}"
+                            {% if request.GET.category == category.name %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            
+                <select onchange="window.location.href=this.value">
+                    <option value="">Сортировать по</option>
+                    <option value="?sort_by=price">Цена (возрастание)</option>
+                    <option value="?sort_by=-price">Цена (убывание)</option>
+                    <option value="?sort_by=name">Название</option>
+                </select>
+            </div>
             <div class="product-list">
                 {% for product in products %}
                 <div class="product-item">

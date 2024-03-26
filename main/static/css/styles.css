@@ -198,7 +198,8 @@ footer ul li a {
 /* Стили для экранов шириной менее 768 пикселей (мобильные устройства) */
 @media (max-width: 768px) {
     header {
-        flex-wrap: wrap;
+        flex-direction: column;
+        text-align: center;
     }
 
     header .col-md-3,
@@ -215,6 +216,26 @@ footer ul li a {
     header ul li {
         padding: 5px;
     }
+
+    .nav {
+        justify-content: center;
+        flex-wrap: wrap; /* Позволяет элементам переноситься на следующую строку */
+      }
+    
+      .nav li {
+        padding: 0.5rem; /* Обеспечивает отступы вокруг каждой ссылки */
+      }
+    
+      .col-md-3.mb-2.mb-md-0, .col-md-3.text-end {
+        flex-basis: 100%; /* Заставляет элементы занимать всю доступную ширину */
+        display: flex; /* Применяет flexbox к этим элементам */
+        justify-content: center; /* Центрирует содержимое элементов */
+        margin-bottom: 0.5rem; /* Обеспечивает отступ снизу для каждого блока */
+      }
+    
+      .btn {
+        margin: 5px; /* Добавляет отступы вокруг кнопок */
+      }
 
     /* Responsive styles */
     footer {
@@ -275,3 +296,60 @@ footer ul li a {
     width: 100%; /* на всю ширину контейнера */
 }
       
+.product-section {
+    padding: 20px;
+    background-color: #f7f7f7;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Расстояние между товарами */
+    justify-content: center;
+}
+
+.product-item {
+    width: calc(33.333% - 20px); /* Три товара в ряд с учетом gap */
+    background-color: #ffffff;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+}
+
+.product-title {
+    margin-top: 10px;
+    font-size: 1.2em;
+}
+
+.product-description {
+    font-size: 0.9em;
+    color: #666;
+    margin: 10px 0;
+}
+
+.full-description {
+    display: none;
+}
+
+.product-price {
+    font-weight: bold;
+    color: #333;
+}
+
+.product-buy-button {
+    background-color: #008cba;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.product-buy-button:hover {
+    background-color: #005f73;
+}
