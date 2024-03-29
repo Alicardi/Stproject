@@ -1,30 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Солярий</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
-    <!-- Link Swiper's CSS -->
-    <link
-    rel="stylesheet"
-    href="https://unpkg.com/swiper/swiper-bundle.min.css"
-    />
+{% extends 'main/base.html' %}
 
-    <!-- Swiper JS -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+{% block title %}Главная{% endblock %}
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2vEFF1dzIBu5qhZo4YI9L0GBYF/uYYlEavtYlbJa8fY6RyW3taMr8Jm3R7dBSY4ySv7naaGA=="
-    crossorigin=""/>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-  {% include 'main/header.html' %}
-
-    <main>
+{% block content %}
         <section id="about">
             <h2>О нас</h2>
             <p>Здесь информация о солярии...</p>
@@ -35,11 +13,9 @@
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
                 <!-- Slides -->
-                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_1.jpg' %}" alt="Image description"></div>
-                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_2.jpg' %}" alt="Image description"></div>
-                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_3.jpg' %}" alt="Image description"></div>
-                <div class="swiper-slide"><img src="{% static 'img/DALLъE-2024-03-23-17.45_4.jpg' %}" alt="Image description"></div>
-                <!-- Добавьте больше слайдов по аналогии -->
+                {% for img in images %}
+                <div class="swiper-slide"><img src="{{ img.image.url }}" alt="{{ img.description }}"></div>
+                {% endfor %}
             </div>
             <!-- If we need pagination -->
             <!-- <div class="swiper-pagination"></div> -->
@@ -51,9 +27,9 @@
 
         <div id="map"></div>
 
-    </main>
+    {% endblock %}
 
-    {% include 'main/footer.html' %}
+    {% block script %}
     <script>
         var mySwiper = new Swiper('.swiper-container', {
           // Optional parameters
@@ -98,5 +74,4 @@
       <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKKMxh13maqRowYFVJvpZPaXLpec99YP0&callback=initMap">
       </script>      
-</body>
-</html>
+{% endblock %}

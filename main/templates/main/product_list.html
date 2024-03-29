@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог продуктов</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.1">
-</head>
-<body>
-    {% include 'main/header.html' %}
+{% extends 'main/base.html' %}
 
-    <main>
+{% block title %}Товары{% endblock %}
+
+{% block content %}
         <section class="product-section">
             <h1>Каталог кремов для загара</h1>
             <div class="filters">
@@ -50,11 +42,9 @@
                 {% endfor %}
             </div>
         </section>
-    </main>
+    {% endblock %}
 
-    <footer>
-        <!-- Ваш футер -->
-    </footer>
+    {% block script %}
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
@@ -68,6 +58,5 @@
             });
         });
     </script>
-    <!-- Ваши скрипты -->
-</body>
-</html>
+    {% endblock %}
+

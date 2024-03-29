@@ -1,8 +1,13 @@
 from django.shortcuts import render
-from .models import Product, Category
+from .models import Product, Category, GalleryImage
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from .forms import SignUpForm
+
 
 def index(request):
-    return render(request, 'main/index.html')
+    images = GalleryImage.objects.all()
+    return render(request, 'main/index.html', {'images': images})
 
 def product_list(request):
     products = Product.objects.all()
@@ -19,3 +24,14 @@ def product_list(request):
         products = products.order_by(sort_by)
 
     return render(request, 'main/product_list.html', {'products': products, 'categories': categories})
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Автоматически войти после регистрации
+            return redirect('index')  # Перенаправить на главную страницу
+    else:
+        form = SignUpForm()
+    return render(request, 'main/signup.html', {'form': form})
