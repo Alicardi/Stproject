@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Product, Category, GalleryImage
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login as auth_login, logout
 from .forms import SignUpForm
 
 
@@ -30,8 +30,12 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Автоматически войти после регистрации
+            auth_login(request, user)  # Автоматически войти после регистрации
             return redirect('index')  # Перенаправить на главную страницу
     else:
         form = SignUpForm()
     return render(request, 'main/signup.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
