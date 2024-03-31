@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-
+from django.http import JsonResponse
 
 
 def index(request):
@@ -34,10 +34,11 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return JsonResponse({'success': True})
         else:
-            messages.error(request, 'Неправильный логин или пароль')
-    return redirect('home')
+            return JsonResponse({'success': False, 'error': 'Неправильный логин или пароль'})
+    return JsonResponse({'success': False, 'error': 'Только POST запросы поддерживаются'}, status=405)
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -49,17 +50,17 @@ def signup_view(request):
         
         # Проверка данных
         if password != password_confirm:
-            return render(request, 'main/base.html', {'error': 'Пароли не совпадают'})
-        
-        # Создание пользователя
+            messages.error(request, 'Пароли не совпадают')
+            return redirect('signup')  # Или используйте render, если это предпочтительнее
+
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
             user.save()
-            login(request, user)  # Автоматический вход пользователя
+            login(request, user)
             return redirect('home')
         except Exception as e:
-            return render(request, 'main/base.html', {'error': str(e)})
-    return redirect('home')
+            messages.error(request, str(e))
+    return redirect('signup')  # Или используйте render
 
 def logout_view(request):
     logout(request)

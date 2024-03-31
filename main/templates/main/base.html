@@ -38,20 +38,12 @@
     <div class="custom-modal-content">
         <span class="custom-close-button" onclick="closeModal('loginModal')">×</span>
         <h2>Вход</h2>
-        <form method="post" action="{% url 'login' %}">
+        <form id="loginForm" data-login-url="{% url 'login' %}"> <!-- Убрал атрибут action и добавил id и data-login-url -->
             {% csrf_token %}
             <input type="text" placeholder="Логин или email" name="username" required>
             <input type="password" placeholder="Пароль" name="password" required>
             <button type="submit" class="btn btn-primary">Войти</button>
-            {% if messages %}
-            <div class="messages">
-                {% for message in login_errors %}
-                    <div class="alert {{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-            {% endif %}
+            <div id="loginError" class="alert alert-danger d-none"></div> <!-- Изменил div для сообщений об ошибках -->
         </form>
     </div>
 </div>
@@ -68,16 +60,9 @@
             <input type="password" placeholder="Пароль" name="password" id="password" required pattern=".{8,}" title="Пароль должен содержать не менее 8 символов">
             <input type="password" placeholder="Подтвердите пароль" name="confirm_password" id="confirm_password" required oninput="check(this)">
             <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-            {% if messages %}
-            <div class="messages">
-                {% for message in signup_errors %}
-                    <div class="alert {{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+            <div id="loginErrorMessage"></div>
         </form>
+        <div id="loginError" style="color: red;"></div>
     </div>
 </div>
 
@@ -127,6 +112,47 @@
         }
     };
 </script>
+<script>
+    // Вспомогательная функция для получения значения CSRF токена
+    function getCsrfToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    }
+    
+    // Обработка отправки формы входа
+    document.addEventListener('DOMContentLoaded', function() {
+        var loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var errorDiv = document.getElementById('loginError');
+            var formData = new FormData(this);
+    
+            fetch(loginForm.dataset.loginUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCsrfToken()
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeModal('loginModal'); // Закрыть модальное окно
+                    location.reload(); // Перезагрузить страницу, чтобы обновить состояние пользователя
+                } else {
+                    errorDiv.textContent = data.error; // Показать сообщение об ошибке
+                    errorDiv.classList.remove('d-none'); // Показать элемент с сообщением об ошибке
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при попытке входа:', error);
+            });
+        });
+    });
+    </script>
+    
+    
+
     
 
 </body>
