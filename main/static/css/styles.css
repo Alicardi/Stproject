@@ -195,6 +195,11 @@ footer ul li a {
     color: #000;
 }
 
+.modal-backdrop.show {
+    opacity: 0.5 !important; /* you can adjust the opacity to your liking */
+    backdrop-filter: blur(10px); /* this property creates the blur effect */
+}
+
 /* Стили для экранов шириной менее 768 пикселей (мобильные устройства) */
 @media (max-width: 768px) {
     header {

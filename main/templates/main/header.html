@@ -10,15 +10,19 @@
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
         <li><a href="products/" class="nav-link px-2">Product</a></li>
-        <li><a href="#" class="nav-link px-2">Account</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="profile/" class="nav-link px-2">Account</a></li>
+        {% endif %}
       </ul>
   
       <div class="col-md-3 text-end">
         {% if user.is_authenticated %}
+            <!-- Trigger for logout modal -->
             <a href="{% url 'logout' %}" class="btn btn-outline-primary me-2">Logout</a>
         {% else %}
-            <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Login</a>
-            <a href="{% url 'signup' %}" class="btn btn-primary">Sign-up</a>
+            <!-- Triggers for login and signup modals -->
+            <button class="btn btn-outline-primary me-2" onclick="openModal('loginModal')">Login</button>
+            <button class="btn btn-primary" onclick="openModal('signupModal')">Sign-up</button>
         {% endif %}
     </div>
 </header>

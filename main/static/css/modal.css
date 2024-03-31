@@ -1,0 +1,123 @@
+.blur-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(8px);
+    z-index: 1; /* Убедитесь, что это ниже модального окна */
+  }
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-modal-content h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.custom-close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.custom-close-button:hover {
+    color: #000;
+}
+
+.custom-modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-modal-content input {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.custom-modal-content button {
+    padding: 15px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.custom-modal-content button:hover {
+    background-color: #0056b3;
+}
+
+/* Сообщение о неправильном входе */
+.messages {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.alert-error {
+    background-color: #f44336; /* Красный для ошибок */
+}
+
+.alert-success {
+    background-color: #4CAF50; /* Зеленый для успешных сообщений */
+}
+
+
+.alert {
+    padding: 10px;
+    background-color: #f44336; /* Красный цвет фона */
+    color: white; /* Белый текст */
+    margin-bottom: 15px;
+    border-radius: 5px; /* Скругление углов */
+    text-align: center; /* Текст по центру */
+}
+
+@media (max-width: 767px) {
+    .custom-modal-content {
+        width: 50%; /* Занимать большую часть экрана */
+        margin: 10% auto; /* Отцентрировать и добавить немного пространства сверху */
+        box-shadow: none; /* Убрать тень, если она слишком агрессивна на маленьких экранах */
+    }
+
+    /* Убедитесь, что вводимые поля не выходят за рамки модального окна */
+    .custom-modal-content input[type="text"],
+    .custom-modal-content input[type="email"],
+    .custom-modal-content input[type="password"] {
+        width: calc(100% - 20px); /* Вычесть padding */
+        margin-bottom: 15px; /* Поддерживать пространство между полями */
+    }
+
+    /* Подстройте кнопки под мобильный вид */
+    .custom-modal-content button {
+        width: 100%; /* Чтобы кнопка растягивалась на всю ширину */
+    }
+
+    /* Дополнительные стили для улучшения читаемости */
+    .custom-modal-content h2 {
+        font-size: 1.5em; /* Меньший размер шрифта */
+    }
+}
