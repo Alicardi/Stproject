@@ -111,6 +111,12 @@
             openModal('loginModal');
         }
     };
+    window.onclick = function(event) {
+    if (event.target.classList.contains('blur-background')) {
+        closeModal('loginModal'); // Закрыть модальное окно
+
+    }
+}
 </script>
 <script>
     // Вспомогательная функция для получения значения CSRF токена
@@ -125,7 +131,7 @@
             e.preventDefault();
             var errorDiv = document.getElementById('loginError');
             var formData = new FormData(this);
-    
+
             fetch(loginForm.dataset.loginUrl, {
                 method: 'POST',
                 body: formData,
@@ -141,7 +147,8 @@
                     location.reload(); // Перезагрузить страницу, чтобы обновить состояние пользователя
                 } else {
                     errorDiv.textContent = data.error; // Показать сообщение об ошибке
-                    errorDiv.classList.remove('d-none'); // Показать элемент с сообщением об ошибке
+                    errorDiv.classList.add('alert-error'); // добавляет красную линию, когда есть ошибка
+                    errorDiv.classList.remove('d-none'); // Убедитесь, что элемент видим
                 }
             })
             .catch(error => {
@@ -149,11 +156,8 @@
             });
         });
     });
-    </script>
-    
-    
+</script>
 
-    
 
 </body>
 </html>

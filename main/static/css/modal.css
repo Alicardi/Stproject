@@ -80,6 +80,7 @@
 
 .alert-error {
     background-color: #f44336; /* Красный для ошибок */
+    border-top: 2px solid red;
 }
 
 .alert-success {
@@ -89,11 +90,12 @@
 
 .alert {
     padding: 10px;
-    background-color: #f44336; /* Красный цвет фона */
+    /* background-color: #f44336; Красный цвет фона */
     color: white; /* Белый текст */
     margin-bottom: 15px;
     border-radius: 5px; /* Скругление углов */
     text-align: center; /* Текст по центру */
+    border-top: none;
 }
 
 @media (max-width: 767px) {
