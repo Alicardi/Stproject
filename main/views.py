@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 
 def index(request):
@@ -42,25 +44,30 @@ def login_view(request):
 
 def signup_view(request):
     if request.method == 'POST':
-        # Получение данных из POST запроса
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password1')
         password_confirm = request.POST.get('password2')
         
-        # Проверка данных
         if password != password_confirm:
-            messages.error(request, 'Пароли не совпадают')
-            return redirect('signup')  # Или используйте render, если это предпочтительнее
-
+            return JsonResponse({'success': False, 'error': 'Пароли не совпадают'})
+        
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'success': False, 'error': 'Имя пользователя уже занято'})
+        
+        try:
+            validate_email(email)
+        except ValidationError:
+            return JsonResponse({'success': False, 'error': 'Некорректный адрес электронной почты'})
+        
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
             login(request, user)
-            return redirect('home')
+            return JsonResponse({'success': True})
         except Exception as e:
-            messages.error(request, str(e))
-    return redirect('signup')  # Или используйте render
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Только POST запросы поддерживаются'}, status=405)
 
 def logout_view(request):
     logout(request)

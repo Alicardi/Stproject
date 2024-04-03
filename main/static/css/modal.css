@@ -72,12 +72,6 @@
     background-color: #0056b3;
 }
 
-/* Сообщение о неправильном входе */
-.messages {
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
 .alert-error {
     background-color: #f44336; /* Красный для ошибок */
     border-top: 2px solid red;

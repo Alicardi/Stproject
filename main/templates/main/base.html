@@ -53,18 +53,18 @@
     <div class="custom-modal-content">
         <span class="custom-close-button" onclick="closeModal('signupModal')">×</span>
         <h2>Регистрация</h2>
-        <form method="post" action="{% url 'signup' %}">
+        <form id="signupForm" method="post" action="{% url 'signup' %}"> <!-- Добавлен id для формы -->
             {% csrf_token %}
             <input type="text" placeholder="Логин" name="username" required>
             <input type="email" placeholder="Email" name="email" required>
-            <input type="password" placeholder="Пароль" name="password" id="password" required pattern=".{8,}" title="Пароль должен содержать не менее 8 символов">
-            <input type="password" placeholder="Подтвердите пароль" name="confirm_password" id="confirm_password" required oninput="check(this)">
+            <input type="password" placeholder="Пароль" name="password1" id="password" required pattern=".{8,}" title="Пароль должен содержать не менее 8 символов"> <!-- Исправлено имя на password1 -->
+            <input type="password" placeholder="Подтвердите пароль" name="password2" id="confirm_password" required oninput="check(this)"> <!-- Исправлено имя на password2 и функция check изменена -->
             <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-            <div id="loginErrorMessage"></div>
+            <div id="signupError" class="alert alert-danger d-none"></div> <!-- Элемент для отображения ошибок -->
         </form>
-        <div id="loginError" style="color: red;"></div>
     </div>
 </div>
+
 
 {% include 'main/footer.html' %}
 
@@ -156,6 +156,42 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var signupForm = document.getElementById('signupForm');
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            var errorDiv = document.getElementById('signupError'); // Получаем элемент для отображения ошибок
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCsrfToken()
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeModal('signupModal'); // Закрыть модальное окно
+                    location.reload(); // или перенаправление на страницу профиля
+                } else {
+                    // Показать сообщение об ошибке
+                    errorDiv.textContent = data.error;
+                    errorDiv.classList.add('alert-error'); // добавляет красную линию, когда есть ошибка
+                    errorDiv.classList.remove('d-none'); // Сделать элемент видимым
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                errorDiv.textContent = 'Произошла ошибка. Пожалуйста, попробуйте позже.';
+                errorDiv.classList.remove('d-none');
+            });
+        });
+    });
+
 </script>
 
 
