@@ -1,12 +1,16 @@
-from django.shortcuts import render
 from .models import Product, Category, GalleryImage
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.contrib import messages
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode
 
 
 def index(request):
@@ -37,6 +41,8 @@ def login_view(request):
         if user is not None:
             login(request, user)
             return JsonResponse({'success': True})
+        elif user is not None and not user.is_email_verified:
+            return JsonResponse({'success': False, 'error': 'Пожалуйста, подтвердите ваш email перед входом.'})
         else:
             return JsonResponse({'success': False, 'error': 'Неправильный логин или пароль'})
     return JsonResponse({'success': False, 'error': 'Только POST запросы поддерживаются'}, status=405)
@@ -55,6 +61,9 @@ def signup_view(request):
         if User.objects.filter(username=username).exists():
             return JsonResponse({'success': False, 'error': 'Имя пользователя уже занято'})
         
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'success': False, 'error': 'Этот адрес электронной почты уже используется'})
+        
         try:
             validate_email(email)
         except ValidationError:
@@ -62,8 +71,22 @@ def signup_view(request):
         
         try:
             user = User.objects.create_user(username=username, email=email, password=password)
-            login(request, user)
-            return JsonResponse({'success': True})
+            user.is_active = False  # Не активируем пользователя сразу
+            user.save()
+
+            # Создаем токен для верификации и отправляем email
+            token = default_token_generator.make_token(user)
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+            send_mail(
+                'Подтвердите вашу учетную запись',
+                f"Пожалуйста, перейдите по ссылке ниже для подтверждения вашей учетной записи: http://{request.get_host()}/verify-email/{uidb64}/{token}/",
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            return JsonResponse({'success': True, 'message': 'Пожалуйста, проверьте ваш email для завершения регистрации.'})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
 
@@ -80,3 +103,31 @@ def profile_view(request):
     # Ваш код для обработки данных пользователя
     # ...
     return render(request, 'main/profile.html')
+
+def send_verification_email(user, request):
+    token = default_token_generator.make_token(user)
+    subject = 'Подтверждение электронной почты'
+    message = f"Для подтверждения электронной почты перейдите по ссылке: http://{request.get_host()}/verify-email/{user.pk}/{token}/"
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    
+def verify_email(request, user_id, token):
+    try:
+        # Декодируем идентификатор пользователя из base64
+        uid = force_str(urlsafe_base64_decode(user_id))
+        # Используем декодированный UID для получения объекта User
+        user = get_object_or_404(User, pk=uid)
+
+        # Проверяем, верный ли токен и если да, то активируем пользователя
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()  # Не забудьте сохранить изменения!
+            # Можете здесь добавить логин пользователя, если это нужно
+            # login(request, user)
+            # И отправляем пользователя на страницу входа, профиля или другую
+            return redirect('home')  # Или другой URL
+        else:
+            # Если токен не верный, возвращаем ошибку
+            return JsonResponse({'success': False, 'error': 'Ссылка недействительна или устарела'})
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        # В случае исключения возвращаем ошибку
+        return JsonResponse({'success': False, 'error': 'Недопустимый запрос'})
