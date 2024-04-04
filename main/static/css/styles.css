@@ -78,6 +78,15 @@ header .btn-primary:hover {
     background-color: #0056b3;
 }
 
+.container {
+    padding: 0 15px;
+  }
+  
+  /* Для каждого раздела */
+  section {
+    padding: 20px 0;
+  }
+
 /* Footer styles */
 footer {
     display: flex;
