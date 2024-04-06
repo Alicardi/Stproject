@@ -1,6 +1,6 @@
 from .models import Product, Category, GalleryImage
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
@@ -11,6 +11,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 def index(request):
@@ -131,3 +132,14 @@ def verify_email(request, user_id, token):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         # В случае исключения возвращаем ошибку
         return JsonResponse({'success': False, 'error': 'Недопустимый запрос'})
+    
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Обновляем сессию, чтобы не выходить из системы
+            # Перенаправляем на страницу успешного изменения пароля или выводим сообщение
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'profile.html', {'form': form})

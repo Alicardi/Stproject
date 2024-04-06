@@ -1,25 +1,58 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
+<div class="container mt-4">
     <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <h2>Изменение профиля</h2>
-            <form method="post" action="{% url 'profile' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="full_name" class="form-label">ФИО:</label>
-                    <input type="text" class="form-control" id="full_name" name="full_name" value="{{ profile.full_name }}">
+        <div class="col-lg-6">
+            <div class="card mb-4 mx-1" style="max-width: 540px;">
+                <div class="card-header">
+                    Изменение профиля
                 </div>
-                <div class="mb-3">
-                    <label for="phone_number" class="form-label">Номер телефона:</label>
-                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ profile.phone_number }}">
+                <div class="card-body">
+                    <form method="post" action="{% url 'profile' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label">ФИО:</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ profile.full_name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone_number" class="form-label">Номер телефона:</label>
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ profile.phone_number }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Адрес:</label>
+                            <textarea class="form-control" id="address" name="address">{{ profile.address }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Адрес:</label>
-                    <textarea class="form-control" id="address" name="address">{{ profile.address }}</textarea>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4 mx-1" style="max-width: 540px;">
+                <div class="card-header">
+                    Изменение пароля
                 </div>
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-            </form>
+                <div class="card-body">
+                    <form method="post" action="{% url 'change_password' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="old_password" class="form-label">Текущий пароль:</label>
+                            <input type="password" class="form-control" id="old_password" name="old_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password1" class="form-label">Новый пароль:</label>
+                            <input type="password" class="form-control" id="new_password1" name="new_password1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password2" class="form-label">Подтверждение нового пароля:</label>
+                            <input type="password" class="form-control" id="new_password2" name="new_password2" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Изменить пароль</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}

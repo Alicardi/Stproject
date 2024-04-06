@@ -367,3 +367,27 @@ footer ul li a {
 .product-buy-button:hover {
     background-color: #005f73;
 }
+
+/* Дополнительные стили для формы */
+.form-label {
+    font-weight: bold;
+}
+
+.btn-primary {
+    width: 100%; /* Занимать всю ширину контейнера */
+}
+
+/* Стили для карточек */
+.card-header {
+    background-color: #f8f9fa; /* Светлый фон для заголовка */
+    border-bottom: 1px solid #e3e6ea; /* Граница для отделения от тела */
+}
+
+.card-body {
+    padding: 2rem; /* Больше паддинга для внутренних элементов */
+}
+
+/* Отступы для элементов формы */
+.mb-4 {
+    margin-bottom: 1.5rem; /* Отступ снизу для карточек */
+}
