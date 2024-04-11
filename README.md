@@ -22,7 +22,7 @@
 
 3. Активируйте виртуальное окружение:
 
-    - В Windows:
+    - В Windows (cmd):
     ```bash
     venv\Scripts\activate
     ```
