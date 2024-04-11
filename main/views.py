@@ -98,11 +98,8 @@ def logout_view(request):
     return redirect('home')
 
 def profile_view(request):
-    # Убедитесь, что пользователь авторизован
     if not request.user.is_authenticated:
         return redirect('username')
-    # Ваш код для обработки данных пользователя
-    # ...
     return render(request, 'main/profile.html')
 
 def send_verification_email(user, request):
@@ -121,11 +118,8 @@ def verify_email(request, user_id, token):
         # Проверяем, верный ли токен и если да, то активируем пользователя
         if default_token_generator.check_token(user, token):
             user.is_active = True
-            user.save()  # Не забудьте сохранить изменения!
-            # Можете здесь добавить логин пользователя, если это нужно
-            # login(request, user)
-            # И отправляем пользователя на страницу входа, профиля или другую
-            return redirect('home')  # Или другой URL
+            user.save()  
+            return redirect('home')
         else:
             # Если токен не верный, возвращаем ошибку
             return JsonResponse({'success': False, 'error': 'Ссылка недействительна или устарела'})

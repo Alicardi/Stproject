@@ -37,11 +37,11 @@
 
 
 <main>
-    <div class="container mt-5">
+    <!-- <div class="container mt-5"> -->
     {% block content %}
         <!-- Содержимое страницы здесь -->
     {% endblock %}
-    </div>
+    <!-- </div> -->
 </main>
 
 <!-- Модальное окно для входа -->
@@ -49,12 +49,12 @@
     <div class="custom-modal-content">
         <span class="custom-close-button" onclick="closeModal('loginModal')">×</span>
         <h2>Вход</h2>
-        <form id="loginForm" data-login-url="{% url 'login' %}"> <!-- Убрал атрибут action и добавил id и data-login-url -->
+        <form id="loginForm" data-login-url="{% url 'login' %}">
             {% csrf_token %}
             <input type="text" placeholder="Логин или email" name="username" required>
             <input type="password" placeholder="Пароль" name="password" required>
             <button type="submit" class="btn btn-primary">Войти</button>
-            <div id="loginError" class="alert alert-danger d-none"></div> <!-- Изменил div для сообщений об ошибках -->
+            <div id="loginError" class="alert alert-danger d-none"></div> 
         </form>
     </div>
 </div>
@@ -64,14 +64,14 @@
     <div class="custom-modal-content">
         <span class="custom-close-button" onclick="closeModal('signupModal')">×</span>
         <h2>Регистрация</h2>
-        <form id="signupForm" method="post" action="{% url 'signup' %}"> <!-- Добавлен id для формы -->
+        <form id="signupForm" method="post" action="{% url 'signup' %}"> 
             {% csrf_token %}
             <input type="text" placeholder="Логин" name="username" required>
             <input type="email" placeholder="Email" name="email" required>
-            <input type="password" placeholder="Пароль" name="password1" id="password" required pattern=".{8,}" title="Пароль должен содержать не менее 8 символов"> <!-- Исправлено имя на password1 -->
-            <input type="password" placeholder="Подтвердите пароль" name="password2" id="confirm_password" required oninput="check(this)"> <!-- Исправлено имя на password2 и функция check изменена -->
+            <input type="password" placeholder="Пароль" name="password1" id="password" required pattern=".{8,}" title="Пароль должен содержать не менее 8 символов"> 
+            <input type="password" placeholder="Подтвердите пароль" name="password2" id="confirm_password" required oninput="check(this)">
             <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-            <div id="signupError" class="alert alert-danger d-none"></div> <!-- Элемент для отображения ошибок -->
+            <div id="signupError" class="alert alert-danger d-none"></div> 
         </form>
     </div>
 </div>
@@ -111,7 +111,6 @@
         if (input.value != document.getElementById('password').value) {
             input.setCustomValidity('Пароли не совпадают.');
         } else {
-            // Пароль совпадает, ошибка не требуется
             input.setCustomValidity('');
         }
     }
@@ -124,7 +123,7 @@
     };
     window.onclick = function(event) {
     if (event.target.classList.contains('blur-background')) {
-        closeModal('loginModal'); // Закрыть модальное окно
+        closeModal('loginModal'); 
 
     }
 }
@@ -154,12 +153,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    closeModal('loginModal'); // Закрыть модальное окно
-                    location.reload(); // Перезагрузить страницу, чтобы обновить состояние пользователя
+                    closeModal('loginModal'); 
+                    location.reload(); 
                 } else {
-                    errorDiv.textContent = data.error; // Показать сообщение об ошибке
-                    errorDiv.classList.add('alert-error'); // добавляет красную линию, когда есть ошибка
-                    errorDiv.classList.remove('d-none'); // Убедитесь, что элемент видим
+                    errorDiv.textContent = data.error; 
+                    errorDiv.classList.add('alert-error'); 
+                    errorDiv.classList.remove('d-none'); 
                 }
             })
             .catch(error => {
@@ -173,7 +172,7 @@
         signupForm.addEventListener('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
-            var errorDiv = document.getElementById('signupError'); // Получаем элемент для отображения ошибок
+            var errorDiv = document.getElementById('signupError'); 
 
             fetch(this.action, {
                 method: 'POST',
@@ -186,13 +185,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    closeModal('signupModal'); // Закрыть модальное окно
-                    location.reload(); // или перенаправление на страницу профиля
+                    closeModal('signupModal'); 
+                    location.reload(); 
                 } else {
-                    // Показать сообщение об ошибке
                     errorDiv.textContent = data.error;
-                    errorDiv.classList.add('alert-error'); // добавляет красную линию, когда есть ошибка
-                    errorDiv.classList.remove('d-none'); // Сделать элемент видимым
+                    errorDiv.classList.add('alert-error'); 
+                    errorDiv.classList.remove('d-none'); 
                 }
             })
             .catch(error => {

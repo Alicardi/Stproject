@@ -13,6 +13,7 @@ header {
     justify-content: space-between;
     padding: 10px 20px; /* Паддинг с каждой стороны */
     align-items: center;
+    border-bottom: none;
 }
 
 /* Логотип и навигация на маленьких экранах (мобильных) */
@@ -391,3 +392,85 @@ footer ul li a {
 .mb-4 {
     margin-bottom: 1.5rem; /* Отступ снизу для карточек */
 }
+
+.carousel-item {
+    height: 100vh; 
+    max-height: 500px;
+    color: #fff; 
+    background-color: #333; 
+    background-image: none; /* Убрать изображение если оно было */
+  }
+  
+  .carousel {
+    margin-bottom: 0; /* Убрать отступ снизу если он есть */
+  }
+  
+  /* Убедимся, что карусель растягивается на всю ширину экрана */
+  .carousel-inner {
+    width: 100vw;
+    overflow: hidden;
+  }
+  
+  .carousel-control-prev,
+  .carousel-control-next {
+    background-color: #333;
+  }
+  
+  /* Изменить цвет стрелок, если они слишком темные */
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    filter: invert(1);
+  }
+ 
+  .carousel-indicators li {
+    background-color: #888; 
+  }
+  
+  .carousel-indicators .active {
+    background-color: #fff; 
+  }
+  
+  /* Для кнопок */
+  .btn-primary {
+    background-color: #007bff; 
+    border-color: #007bff; 
+  }
+  
+  /* Текст кнопки */
+  .btn-primary {
+    color: #fff;
+  }
+  
+  /* Стили для контейнера с заголовками и кнопками */
+.container-marketing {
+    display: flex;
+    justify-content: center; /* Выравниваем элементы по горизонтали */
+    align-items: center; /* Выравниваем элементы по вертикали */
+    flex-direction: column; /* Располагаем элементы в колонку */
+    text-align: center; 
+  }
+  
+  /* Стили для рядов внутри контейнера */
+  .row {
+    width: 100%; 
+    justify-content: center; 
+    margin: 0 auto; /* Убираем внешние отступы и выравниваем ряд по центру страницы */
+  }
+  
+  
+  h2 {
+    margin-top: 1rem; /* Отступ сверху */
+    margin-bottom: 0.5rem; /* Отступ снизу */
+  }
+  
+  
+  .btn {
+    margin-top: 0.5rem; /* Отступ сверху */
+    margin-bottom: 2rem; /* Отступ снизу */
+  }
+  
+  /* Стили для секции "О нас" */
+  #about {
+    margin-top: 2rem; /* Отступ сверху для секции "О нас" */
+  }
+  

@@ -5,13 +5,13 @@
     right: 0;
     bottom: 0;
     backdrop-filter: blur(8px);
-    z-index: 1; /* Убедитесь, что это ниже модального окна */
+    z-index: 1; /* Должно быть ниже модального окна */
   }
 
 .custom-modal {
     display: none;
     position: fixed;
-    z-index: 2;
+    z-index: 20000;
     left: 0;
     top: 0;
     width: 100%;
@@ -72,23 +72,24 @@
     background-color: #0056b3;
 }
 
+/* Вывод ошибок */
 .alert-error {
-    background-color: #f44336; /* Красный для ошибок */
+    background-color: #f44336; 
     border-top: 2px solid red;
 }
 
 .alert-success {
-    background-color: #4CAF50; /* Зеленый для успешных сообщений */
+    background-color: #4CAF50; 
 }
 
 
 .alert {
     padding: 10px;
     /* background-color: #f44336; Красный цвет фона */
-    color: white; /* Белый текст */
+    color: white; 
     margin-bottom: 15px;
-    border-radius: 5px; /* Скругление углов */
-    text-align: center; /* Текст по центру */
+    border-radius: 5px; 
+    text-align: center;
     border-top: none;
 }
 
@@ -96,10 +97,9 @@
     .custom-modal-content {
         width: 50%; /* Занимать большую часть экрана */
         margin: 10% auto; /* Отцентрировать и добавить немного пространства сверху */
-        box-shadow: none; /* Убрать тень, если она слишком агрессивна на маленьких экранах */
+        box-shadow: none; /* Убрать тень */
     }
 
-    /* Убедитесь, что вводимые поля не выходят за рамки модального окна */
     .custom-modal-content input[type="text"],
     .custom-modal-content input[type="email"],
     .custom-modal-content input[type="password"] {
@@ -109,11 +109,11 @@
 
     /* Подстройте кнопки под мобильный вид */
     .custom-modal-content button {
-        width: 100%; /* Чтобы кнопка растягивалась на всю ширину */
+        width: 100%; 
     }
 
     /* Дополнительные стили для улучшения читаемости */
     .custom-modal-content h2 {
-        font-size: 1.5em; /* Меньший размер шрифта */
+        font-size: 1.5em; 
     }
 }

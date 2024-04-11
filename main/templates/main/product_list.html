@@ -3,6 +3,7 @@
 {% block title %}Товары{% endblock %}
 
 {% block content %}
+<div class="container mt-5">
 <section class="product-section">
     <h1>Каталог кремов для загара</h1>
     <div class="filters">
@@ -59,13 +60,13 @@
     </div>
   </div>
 </div>
-
+</div>
 {% endblock %}
 
 {% block script %}
+
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-  // Инициализация Swiper и другие скрипты, если они у вас есть
 
   // Скрипт для управления модальным окном
   document.addEventListener("DOMContentLoaded", function() {
@@ -85,7 +86,6 @@
       modalTitle.textContent = productTitle;
       modalBody.innerHTML = productDescription;
       
-      // Отображение модального окна
       $('#productDetailModal').modal('show');
     });
   });
