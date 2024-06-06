@@ -16,7 +16,7 @@
             </option>
             {% endfor %}
         </select>
-    
+
         <select onchange="window.location.href=this.value">
             <option value="">Сортировать по</option>
             <option value="?sort_by=price">Цена (возрастание)</option>
@@ -25,70 +25,36 @@
         </select>
     </div>
     <div class="product-list">
-        {% for product in products %}
-        <div class="product-item">
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-            <h2 class="product-title">{{ product.name }}</h2>
-            <p class="product-description">
-                {{ product.description|truncatewords:20 }}
-                <a href="#" class="toggle-description" data-bs-toggle="modal" data-bs-target="#productDetailModal" data-title="{{ product.name }}" data-description="{{ product.description }}">Показать больше</a>
-            </p>
-            
-            <p class="product-price">Цена: {{ product.price }} руб.</p>
-            <button class="product-buy-button">Купить</button>
-        </div>
-        {% empty %}
-        <p>Продукты не найдены.</p>
-        {% endfor %}
-    </div>
-</section>
-
-<!-- Модальное окно для детального просмотра продукта -->
-<div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="productDetailModalLabel">Детали продукта</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      {% for product in products %}
+      <div class="product-item">
+          <div id="carousel{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                  <div class="carousel-item active">
+                      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="d-block w-100">
+                  </div>
+                  {% for image in product.images.all %}
+                  <div class="carousel-item">
+                      <img src="{{ image.image.url }}" alt="Additional image" class="d-block w-100">
+                  </div>
+                  {% endfor %}
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              </button>
+          </div>
+          <h2 class="product-title">{{ product.name }}</h2>
+          <p class="product-price">Цена: {{ product.price }} руб.</p>
+          <button class="product-buy-button">Купить</button>
       </div>
-      <div class="modal-body">
-        <!-- Содержимое модального окна -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Добавить в корзину</button>
-      </div>
-    </div>
+      {% empty %}
+      <p>Продукты не найдены.</p>
+      {% endfor %}
+      
   </div>
+   
+</section>
 </div>
-</div>
-{% endblock %}
-
-{% block script %}
-
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script>
-
-  // Скрипт для управления модальным окном
-  document.addEventListener("DOMContentLoaded", function() {
-  // Ссылки "Показать больше", которые должны открывать модальное окно
-  document.querySelectorAll('.toggle-description').forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // Извлечение данных о продукте из data-атрибутов
-      var productTitle = this.getAttribute('data-title');
-      var productDescription = this.getAttribute('data-description');
-      
-      // Заполнение модального окна данными
-      var modalTitle = document.querySelector('#productDetailModal .modal-title');
-      var modalBody = document.querySelector('#productDetailModal .modal-body');
-      
-      modalTitle.textContent = productTitle;
-      modalBody.innerHTML = productDescription;
-      
-      $('#productDetailModal').modal('show');
-    });
-  });
-});
-</script>
 {% endblock %}
