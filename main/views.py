@@ -1,4 +1,4 @@
-from .models import Product, Category, GalleryImage
+from .models import Product, Category, GalleryImage, Cart, CartItem
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -137,3 +137,11 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'profile.html', {'form': form})
+
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(product=product, cart=cart)
+    cart_item.quantity += 1
+    cart_item.save()
+    return JsonResponse({'status': 'success', 'message': 'Product added to cart'})
