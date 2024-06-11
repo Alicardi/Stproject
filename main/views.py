@@ -12,6 +12,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -138,10 +139,20 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'profile.html', {'form': form})
 
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, pk=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_item, created = CartItem.objects.get_or_create(product=product, cart=cart)
-    cart_item.quantity += 1
-    cart_item.save()
-    return JsonResponse({'status': 'success', 'message': 'Product added to cart'})
+@login_required
+def add_to_cart(request, productId):
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        product = get_object_or_404(Product, pk=productId)
+        cart_item, created = CartItem.objects.get_or_create(product=product, cart=cart)
+        cart_item.quantity += 1
+        cart_item.save()
+        # Предоставление данных о продукте в ответе
+        return JsonResponse({
+            'success': True,
+            'product_name': product.name,
+            'product_price': product.price,
+            'product_image': product.image.url
+        })
+    else:
+        return JsonResponse({'success': False, 'message': 'Пользователь не аутентифицирован'}, status=401)

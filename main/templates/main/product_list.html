@@ -47,7 +47,7 @@
           </div>
           <h2 class="product-title">{{ product.name }}</h2>
           <p class="product-price">Цена: {{ product.price }} руб.</p>
-          <button class="product-buy-button" data-product-id="{{ product.id }}">Купить</button>
+          <button class="btn btn-primary buy-button" data-product-id="{{ product.id }}">Купить</button>
       </div>
       {% empty %}
       <p>Продукты не найдены.</p>
@@ -59,34 +59,54 @@
 </div>
 
 <script>
-    function addToCart(productId) {
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value; // Получаем CSRF токен из скрытого input'а
-    
-        fetch(`/add_to_cart/${productId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
-            body: JSON.stringify({ 'quantity': 1 })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('Something went wrong');
-        })
-        .then(data => console.log('Item added to cart:', data))
-        .catch(error => console.error('Error adding item to cart:', error));
-    }
-    
-    document.querySelectorAll('.product-buy-button').forEach(button => {
+    document.addEventListener('DOMContentLoaded', function() {
+    const buyButtons = document.querySelectorAll('.buy-button');
+    buyButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id'); // Changed to getAttribute
-            addToCart(productId);
+            const productId = this.getAttribute('data-product-id');
+            fetch(`/add_to_cart/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ 'quantity': 1 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('product-name').textContent = data.product_name;
+                    document.getElementById('product-price').textContent = `${data.product_price} руб.`;
+                    document.getElementById('product-image').src = data.product_image;
+                    $('#cartModal').modal('show');
+                } else {
+                    console.error('Ошибка добавления товара: ', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка: ', error);
+            });
         });
     });
+});
+
+
+    // Функция для получения значения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 </script>
-    
+
 {% endblock %}
 
