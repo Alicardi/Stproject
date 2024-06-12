@@ -5,147 +5,7 @@ body {
     box-sizing: border-box;
 }
 
-/* Стили для шапки */
-header {
-    background-color: #6b7e91; /* Темно-серый фон шапки */
-    color: white; /* Белый текст */
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 20px; /* Паддинг с каждой стороны */
-    align-items: center;
-    border-bottom: none;
-}
 
-/* Логотип и навигация на маленьких экранах (мобильных) */
-header .col-md-3 {
-    flex: 1;
-    display: flex;
-    justify-content: flex-start;
-}
-
-/* Стили для навигационного меню */
-header ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    margin: 0;
-}
-
-header ul li {
-    padding: 0 10px;
-}
-
-header ul li a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-header ul li a:hover {
-    color: #007bff; /* Светло-синий цвет при наведении */
-}
-
-/* Стили для кнопок "Войти" и "Регистрация" */
-header .text-end {
-    display: flex;
-    justify-content: flex-end;
-}
-
-header .btn {
-    border: none;
-    padding: 5px 15px;
-    border-radius: 5px;
-    margin-left: 10px;
-    transition: background-color 0.3s ease;
-}
-
-header .btn-outline-primary {
-    color: white;
-    background-color: transparent;
-    border: 1px solid white;
-}
-
-header .btn-outline-primary:hover {
-    background-color: white;
-    color: #2d363e;
-}
-
-header .btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-
-header .btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.container {
-    padding: 0 60px;
-  }
-  
-  /* Для каждого раздела */
-  section {
-    padding: 20px 0;
-  }
-
-/* Footer styles */
-footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #6b7e91; /* Dark background */
-    color: #ffffff; /* White text color */
-}
-
-footer .col-md-4 {
-    display: flex;
-    align-items: center;
-}
-
-footer a {
-    color: #ffffff; /* White text color for links */
-    text-decoration: none;
-}
-
-footer span {
-    margin-left: 0.5rem;
-}
-
-footer .nav {
-    list-style: none;
-    display: flex; /* Гарантирует, что элементы li будут в ряд */
-    padding: 0;
-    margin: 0;
-    justify-content: flex-end; /* Выравнивание иконок по правому краю */
-}
-
-footer .nav li {
-    margin: 0 10px; /* Добавляет горизонтальный отступ между иконками */
-}
-
-footer .nav li a {
-    color: #ffffff; /* Цвет иконок */
-    font-size: 24px; /* Размер иконок */
-}
-
-/* Social media icons */
-.nav {
-    list-style: none;
-    padding-left: 0;
-}
-
-.nav li {
-    padding: 0;
-}
-
-.nav li a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 0.5rem;
-}
 
 /* SVG icon styles */
 .svg-inline--fa {
@@ -157,20 +17,7 @@ footer .nav li a {
 }
 
 
-nav ul {
-    list-style: none;
-    padding: 0;
-}
 
-nav ul li {
-    display: inline;
-    margin: 0 10px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #000;
-}
 
 main {
     padding: 20px;
@@ -190,20 +37,7 @@ main {
     padding: 20px;
 }
 
-footer ul {
-    list-style: none;
-    padding: 0;
-}
 
-footer ul li {
-    display: inline;
-    margin: 0 10px;
-}
-
-footer ul li a {
-    text-decoration: none;
-    color: #000;
-}
 
 .modal-backdrop.show {
     opacity: 0.5 !important; /* you can adjust the opacity to your liking */
@@ -211,80 +45,7 @@ footer ul li a {
 }
 
 /* Стили для экранов шириной менее 768 пикселей (мобильные устройства) */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        text-align: center;
-    }
 
-    header .col-md-3,
-    header .text-end {
-        flex-basis: 100%;
-        margin-bottom: 10px;
-    }
-
-    header ul {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    header ul li {
-        padding: 5px;
-    }
-
-    .nav {
-        justify-content: center;
-        flex-wrap: wrap; /* Позволяет элементам переноситься на следующую строку */
-      }
-    
-      .nav li {
-        padding: 0.5rem; /* Обеспечивает отступы вокруг каждой ссылки */
-      }
-    
-      .col-md-3.mb-2.mb-md-0, .col-md-3.text-end {
-        flex-basis: 100%; /* Заставляет элементы занимать всю доступную ширину */
-        display: flex; /* Применяет flexbox к этим элементам */
-        justify-content: center; /* Центрирует содержимое элементов */
-        margin-bottom: 0.5rem; /* Обеспечивает отступ снизу для каждого блока */
-      }
-    
-      .btn {
-        margin: 5px; /* Добавляет отступы вокруг кнопок */
-      }
-
-    /* Responsive styles */
-    footer {
-        justify-content: center;
-        text-align: center;
-    }
-
-    footer .col-md-4 {
-        justify-content: center;
-        flex-basis: 100%;
-        margin-bottom: 0.5rem;
-    }
-
-    footer .nav {
-        justify-content: center;
-        flex-basis: 100%;
-    }
-
-    .swiper-container {
-        height: 200px; /* Меньшая высота для мобильных устройств */
-        margin-bottom: 15px;
-    }
-
-    .swiper-slide img {
-        width: 100%; /* Изображение занимает всю ширину слайда */
-        height: auto; /* Высота изображения подстраивается автоматически */
-        object-fit: cover; /* Убедитесь, что изображения не искажены */
-    }
-
-    /* Можете уменьшить количество отображаемых слайдов на мобильных */
-    .swiper-slide {
-        width: 75%; /* Меньшая ширина слайдов позволит увидеть часть соседних слайдов */
-    }
-}
 
 /* Стили для экранов шириной более 768 пикселей */
 @media (min-width: 769px) {
@@ -329,11 +90,13 @@ footer ul li a {
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
+    overflow: hidden; /* Добавим это свойство, чтобы обрезать изображения, выходящие за пределы контейнера */
 }
 
 .product-image {
-    width: 100%;
-    height: auto;
+    width: 80%;  /* Уменьшение ширины до 80% от доступного пространства */
+    height: auto;  /* Поддержание пропорций изображения */
+    object-fit: contain; /* Убеждаемся, что изображение полностью видимо и не обрезается */
 }
 
 .product-title {
@@ -393,13 +156,22 @@ footer ul li a {
     margin-bottom: 1.5rem; /* Отступ снизу для карточек */
 }
 
-.carousel-item {
-    height: 100vh; 
+/* Стили для карусели продуктов */
+.product-carousel .carousel-item {
     max-height: 500px;
-    color: #fff; 
-    background-color: #333; 
-    background-image: none; /* Убрать изображение если оно было */
-  }
+    color: rgb(255, 255, 255);
+    background-color: rgb(51, 51, 51);
+    background-image: none;
+}
+
+/* Стили для основной карусели на главной странице */
+.main-carousel .carousel-item {
+    height: 100vh;
+    max-height: 500px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(51, 51, 51);
+    background-image: none;
+}
   
   .carousel {
     margin-bottom: 0; /* Убрать отступ снизу если он есть */
@@ -411,10 +183,10 @@ footer ul li a {
     overflow: hidden;
   }
   
-  .carousel-control-prev,
+  /* .carousel-control-prev,
   .carousel-control-next {
     background-color: #333;
-  }
+  } */
   
   /* Изменить цвет стрелок, если они слишком темные */
   .carousel-control-prev-icon,
@@ -474,4 +246,3 @@ footer ul li a {
     margin-top: 2rem; /* Отступ сверху для секции "О нас" */
   }
 
-  

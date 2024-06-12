@@ -25,33 +25,34 @@
         </select>
     </div>
     <div class="product-list">
-      {% for product in products %}
-      <div class="product-item">
-          <div id="carousel{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
-              <div class="carousel-inner">
-                  <div class="carousel-item active">
-                      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="d-block w-100">
-                  </div>
-                  {% for image in product.images.all %}
-                  <div class="carousel-item">
-                      <img src="{{ image.image.url }}" alt="Additional image" class="d-block w-100">
-                  </div>
-                  {% endfor %}
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              </button>
-          </div>
-          <h2 class="product-title">{{ product.name }}</h2>
-          <p class="product-price">Цена: {{ product.price }} руб.</p>
-          <button class="btn btn-primary buy-button" data-product-id="{{ product.id }}">Купить</button>
-      </div>
-      {% empty %}
-      <p>Продукты не найдены.</p>
-      {% endfor %}
+        {% for product in products %}
+        <div class="product-item">
+            <div id="carousel{{ forloop.counter }}" class="carousel slide product-carousel" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="d-block w-100 product-image">
+                    </div>
+                    {% for image in product.images.all %}
+                    <div class="carousel-item">
+                        <img src="{{ image.image.url }}" alt="Additional image" class="d-block w-100 product-image">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ forloop.counter }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+            <h2 class="product-title">{{ product.name }}</h2>
+            <p class="product-price">Цена: {{ product.price }} руб.</p>
+            <button class="btn btn-primary buy-button" data-product-id="{{ product.id }}">Купить</button>
+        </div>
+        {% empty %}
+        <p>Продукты не найдены.</p>
+        {% endfor %}
+        
       
   </div>
    
