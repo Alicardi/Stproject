@@ -156,3 +156,9 @@ def add_to_cart(request, productId):
         })
     else:
         return JsonResponse({'success': False, 'message': 'Пользователь не аутентифицирован'}, status=401)
+
+def cart_view(request):
+    # здесь логика для обработки данных корзины, например:
+    cart_items = request.session.get('cart', [])
+    total_price = sum(item['quantity'] * item['price'] for item in cart_items)
+    return render(request, 'main/cart.html', {'cart': cart_items, 'total_price': total_price})

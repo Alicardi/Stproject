@@ -1,0 +1,43 @@
+.cart-items .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.cart-item img {
+    width: 80px; /* Адаптируйте под нужный размер */
+    height: auto;
+    margin-right: 20px;
+}
+
+.cart-item h5 {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.cart-item p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.total h4 {
+    margin-right: 20px;
+    color: #333;
+    font-size: 1.4rem;
+}
+
+.checkout button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.checkout button:hover {
+    background-color: #0056b3;
+}

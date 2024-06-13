@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h1>Корзина</h1>
+    <div class="cart-items">
+        {% for item in cart %}
+        <div class="cart-item d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+            <div class="item-info d-flex align-items-center">
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid" style="width: 120px;">
+                <div class="ms-3">
+                    <h5>{{ item.product.name }}</h5>
+                    <p>{{ item.quantity }} x {{ item.product.price }} руб.</p>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-small btn-danger" onclick="removeFromCart('{{ item.product.id }}')">Удалить</button>
+            </div>
+        </div>
+        {% empty %}
+        <p>Ваша корзина пуста.</p>
+        {% endfor %}
+    </div>
+    <div class="total d-flex justify-content-end mt-3">
+        <h4>Итого: {{ total_price }} руб.</h4>
+    </div>
+    <div class="checkout mt-2">
+        <button class="btn btn-primary">Перейти к оформлению</button>
+    </div>
+</div>
+{% endblock %}
