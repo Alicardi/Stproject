@@ -12,11 +12,16 @@
                 <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid" style="width: 120px;">
                 <div class="ms-3">
                     <h5>{{ item.product.name }}</h5>
-                    <p>{{ item.quantity }} x {{ item.product.price }} руб.</p>
+                    <p id="quantity-{{ item.product.id }}">{{ item.quantity }} x {{ item.product.price }} руб.</p>
                 </div>
-            </div>
+            </div>                     
             <div>
-                <button class="btn btn-small btn-danger" onclick="removeFromCart('{{ item.product.id }}')">Удалить</button>
+                <button onclick="changeQuantity('{{ item.product.id }}', -1)">-</button>
+                <button onclick="changeQuantity('{{ item.product.id }}', 1)">+</button>
+                <form action="{% url 'remove_from_cart' item.product.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-small btn-danger">Удалить</button>
+                </form>
             </div>
         </div>
         {% empty %}
@@ -24,10 +29,47 @@
         {% endfor %}
     </div>
     <div class="total d-flex justify-content-end mt-3">
-        <h4>Итого: {{ total_price }} руб.</h4>
+        <p id="quantity-{{ item.product.id }}">{{ item.quantity }}</p>
+        <h4 id="total-price">Итого: {{ total_price }} руб.</h4>
     </div>
     <div class="checkout mt-2">
         <button class="btn btn-primary">Перейти к оформлению</button>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    window.changeQuantity = function(productId, delta) {
+        fetch(`/change_quantity/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken(),
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ 'delta': delta })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const quantityElement = document.getElementById(`quantity-${productId}`);
+                const totalPriceElement = document.getElementById('total-price');
+                if (quantityElement && totalPriceElement) {
+                    quantityElement.textContent = `${data.new_quantity} x ${data.product_price} руб.`;
+                    totalPriceElement.textContent = `Итого: ${data.total_price} руб.`;
+                } else {
+                    console.error('Element not found');
+                }
+            } else {
+                console.error('Ошибка: ', data.error);
+            }
+        })
+        .catch(error => console.error('Fetch error: ', error));
+    };
+});
+
+function getCsrfToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+</script>
 {% endblock %}

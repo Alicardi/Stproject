@@ -61,40 +61,36 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const buyButtons = document.querySelectorAll('.buy-button');
-    buyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
-            fetch(`/add_to_cart/${productId}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCsrfToken()
-                },
-                body: JSON.stringify({ 'quantity': 1 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('product-name').textContent = data.product_name;
-                    document.getElementById('product-price').textContent = `${data.product_price} руб.`;
-                    document.getElementById('product-image').src = data.product_image;
-                    $('#cartModal').modal('show');
-                } else {
-                    console.error('Ошибка добавления товара: ', data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка: ', error);
+        const buyButtons = document.querySelectorAll('.buy-button');
+        buyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                fetch(`/add_to_cart/${productId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({ 'quantity': 1 })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Товар добавлен в корзину!');
+                    } else {
+                        console.error('Ошибка добавления товара: ', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка: ', error);
+                });
             });
         });
     });
-});
-
-
-    // Функция для получения значения CSRF токена
-    function getCookie(name) {
+    
+    function getCsrfToken() {
         let cookieValue = null;
+        let name = 'csrftoken';
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
@@ -107,7 +103,7 @@
         }
         return cookieValue;
     }
-</script>
+</script>    
 
 {% endblock %}
 

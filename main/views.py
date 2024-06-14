@@ -12,7 +12,11 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+# from .cart import Cart
+from decimal import Decimal
+import logging
+logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -139,26 +143,137 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'profile.html', {'form': form})
 
-@login_required
-def add_to_cart(request, productId):
-    if request.user.is_authenticated:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        product = get_object_or_404(Product, pk=productId)
-        cart_item, created = CartItem.objects.get_or_create(product=product, cart=cart)
-        cart_item.quantity += 1
-        cart_item.save()
-        # Предоставление данных о продукте в ответе
-        return JsonResponse({
-            'success': True,
-            'product_name': product.name,
-            'product_price': product.price,
-            'product_image': product.image.url
-        })
-    else:
-        return JsonResponse({'success': False, 'message': 'Пользователь не аутентифицирован'}, status=401)
+def add_to_cart(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    quantity = request.POST.get('quantity', 1)
 
+    cart.add(product=product, quantity=int(quantity), update_quantity=False)
+
+    # Проверка на AJAX запрос
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True, 'product_id': product_id, 'product_name': product.name, 'quantity': quantity})
+    else:
+        return redirect('cart')
+    
+@require_POST
+def remove_from_cart(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    cart.remove(product)
+    return redirect('cart')
+
+    
 def cart_view(request):
-    # здесь логика для обработки данных корзины, например:
-    cart_items = request.session.get('cart', [])
+    cart = Cart(request)
+    cart_items = cart.get_items()  # Пример функции, возвращающей элементы корзины как список словарей
     total_price = sum(item['quantity'] * item['price'] for item in cart_items)
     return render(request, 'main/cart.html', {'cart': cart_items, 'total_price': total_price})
+
+@require_POST
+def change_quantity(request, product_id):
+    delta = int(request.POST.get('delta', 0))
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    new_quantity = cart.update_quantity(product, delta)
+    if new_quantity <= 0:
+        cart.remove(product)
+        new_quantity = 0
+    total_price = cart.get_total_price()
+
+    return JsonResponse({
+        'success': True,
+        'new_quantity': new_quantity,
+        'product_price': f"{product.price:.2f}",
+        'total_price': f"{total_price:.2f}"
+    })
+
+class Cart:
+    def __init__(self, request):
+        """Инициализация объекта корзины."""
+        self.session = request.session
+        cart = self.session.get(settings.CART_SESSION_ID)
+        if not cart:
+            # Сохраняем пустую корзину в сессии
+            cart = self.session[settings.CART_SESSION_ID] = {}
+        self.cart = cart
+
+    def add(self, product, quantity=1, update_quantity=False):
+        """Добавить продукт в корзину или обновить его количество."""
+        product_id = str(product.id)
+        if product_id not in self.cart:
+            self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
+        if update_quantity:
+            self.cart[product_id]['quantity'] = quantity
+        else:
+            self.cart[product_id]['quantity'] += quantity
+        self.save()
+
+    def update_quantity(self, product, delta):
+        """Обновление количества заданного продукта."""
+        product_id = str(product.id)
+        if product_id in self.cart:
+            # Увеличиваем или уменьшаем количество товара
+            self.cart[product_id]['quantity'] += delta
+            # Проверяем, не упало ли количество ниже нуля
+            if self.cart[product_id]['quantity'] <= 0:
+                self.remove(product)  # Если да, удаляем товар из корзины
+                return 0
+            self.save()  # Сохраняем изменения в сессии
+            return self.cart[product_id]['quantity']
+        else:
+            # Если продукт не найден в корзине, возможно стоит добавить его
+            self.add(product, quantity=delta)
+            self.save()
+            return self.cart[product_id]['quantity'] if product_id in self.cart else 0
+
+    def save(self):
+        # обновляем сессию cart
+        self.session[settings.CART_SESSION_ID] = self.cart
+        # отметить сессию как "измененную", чтобы убедиться, что она сохранена
+        self.session.modified = True
+
+    def remove(self, product):
+        """Удаление товара из корзины."""
+        product_id = str(product.id)
+        if product_id in self.cart:
+            del self.cart[product_id]
+            self.save()
+
+    def __iter__(self):
+        """Перебор элементов в корзине и получение продуктов из базы данных."""
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+        cart = self.cart.copy()
+        for product in products:
+            cart[str(product.id)]['product'] = product
+
+        for item in cart.values():
+            item['price'] = Decimal(item['price'])
+            item['total_price'] = item['price'] * item['quantity']
+            yield item
+
+    def __len__(self):
+        """Подсчет всех товаров в корзине."""
+        return sum(item['quantity'] for item in self.cart.values())
+
+    def get_total_price(self):
+        """Подсчет стоимости товаров в корзине."""
+        return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())
+
+    def clear(self):
+        # удаление корзины из сессии
+        del self.session[settings.CART_SESSION_ID]
+        self.session.modified = True
+
+    def get_items(self):
+        items = []
+        for item_id, item_data in self.cart.items():
+            product = Product.objects.get(id=item_id)
+            items.append({
+                'product': product,
+                'quantity': item_data['quantity'],
+                'price': product.price
+            })
+        return items
+

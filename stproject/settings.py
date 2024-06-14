@@ -144,3 +144,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apivnev6@gmail.com'
 EMAIL_HOST_PASSWORD = 'sqfb pnhf fwre hdco'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+CART_SESSION_ID = 'cart'

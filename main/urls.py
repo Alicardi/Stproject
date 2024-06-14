@@ -11,6 +11,8 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('verify-email/<slug:user_id>/<slug:token>/', views.verify_email, name='verify-email'),
     path('change_password/', change_password, name='change_password'),
-    path('add_to_cart/<int:productId>/', views.add_to_cart, name='add_to_cart'),
+    path('add_to_cart/<int:product_id>/', add_to_cart, name='add_to_cart'),
+    path('remove_from_cart/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('change_quantity/<int:product_id>/', views.change_quantity, name='change_quantity'),
     path('cart/', views.cart_view, name='cart'),
 ]
