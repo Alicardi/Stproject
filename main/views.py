@@ -13,6 +13,8 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
 from .forms import CheckoutForm
 # from .cart import Cart
 from decimal import Decimal
@@ -145,13 +147,11 @@ def change_password(request):
     return render(request, 'profile.html', {'form': form})
 
 def add_to_cart(request, product_id):
-    cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
+    cart = Cart(request)
     quantity = request.POST.get('quantity', 1)
-
     cart.add(product=product, quantity=int(quantity), update_quantity=False)
 
-    # Проверка на AJAX запрос
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'success': True, 'product_id': product_id, 'product_name': product.name, 'quantity': quantity})
     else:
@@ -191,16 +191,19 @@ def change_quantity(request, product_id):
 
 class Cart:
     def __init__(self, request):
-        """Инициализация объекта корзины."""
+        """
+        Инициализация корзины. Пытаемся получить корзину из текущей сессии.
+        """
         self.session = request.session
-        cart = self.session.get(settings.CART_SESSION_ID)
+        cart = self.session.get('cart')
         if not cart:
-            # Сохраняем пустую корзину в сессии
-            cart = self.session[settings.CART_SESSION_ID] = {}
+            cart = self.session['cart'] = {}
         self.cart = cart
 
     def add(self, product, quantity=1, update_quantity=False):
-        """Добавить продукт в корзину или обновить его количество."""
+        """
+        Добавление товара в корзину или обновление его количества.
+        """
         product_id = str(product.id)
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
@@ -230,7 +233,7 @@ class Cart:
 
     def save(self):
         # обновляем сессию cart
-        self.session[settings.CART_SESSION_ID] = self.cart
+        self.session['cart'] = self.cart
         # отметить сессию как "измененную", чтобы убедиться, что она сохранена
         self.session.modified = True
 
@@ -294,11 +297,21 @@ def process_checkout(request):
                 country=form.cleaned_data['country']
             )
             order.save()
-            return redirect('order_success')
+
+            # Перенос товаров из корзины в заказ
+            cart_items = CartItem.objects.filter(cart__user=request.user)
+            for item in cart_items:
+                # Здесь вы можете создать элементы заказа из элементов корзины
+                # Например:
+                # OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity, price=item.product.price)
+                item.delete()  # Очистка корзины после оформления заказа
+
+            return redirect('order_history')  # Перенаправление на страницу успешного оформления заказа
         else:
             return render(request, 'main/checkout.html', {'form': form})
     else:
         return redirect('checkout')
+
     
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
