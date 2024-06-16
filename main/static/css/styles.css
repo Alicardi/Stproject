@@ -1,11 +1,16 @@
 body {
     font-family: Arial, sans-serif;
+    height: 100%;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-
+#page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
 /* SVG icon styles */
 .svg-inline--fa {
@@ -16,11 +21,9 @@ body {
     overflow: visible;
 }
 
-
-
-
 main {
-    padding: 20px;
+    flex-grow: 1;
+    /* padding: 20px; */
 }
 
 #gallery {

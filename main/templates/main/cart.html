@@ -33,7 +33,7 @@
         <h4 id="total-price">Итого: {{ total_price }} руб.</h4>
     </div>
     <div class="checkout mt-2">
-        <button class="btn btn-primary">Перейти к оформлению</button>
+        <button class="btn btn-primary" onclick="location.href='{% url 'checkout' %}'">Перейти к оформлению</button>
     </div>
 </div>
 
@@ -71,5 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
 function getCsrfToken() {
     return document.querySelector('[name=csrfmiddlewaretoken]').value;
 }
+
+document.querySelector('.btn-primary').addEventListener('click', function() {
+    this.innerHTML = "Перенаправление..."; // Меняет текст кнопки при клике
+    // Здесь может быть код для обработки данных корзины перед перенаправлением
+});
 </script>
 {% endblock %}

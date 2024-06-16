@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+<div id="page-container">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,6 +132,8 @@
 
 {% include 'main/footer.html' %}
 
+</div>
+
 {% block script %}
 
 {% endblock %}
@@ -180,7 +183,7 @@
     }
 }
 </script>
-<!-- <script>
+<script>
     // Вспомогательная функция для получения значения CSRF токена
     function getCsrfToken() {
         return document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -252,35 +255,35 @@
             });
         });
     });
-    
+ 
 // изменениe количества
-function increaseQuantity() {
-    var quantity = parseInt(document.getElementById('product-quantity').value);
-    document.getElementById('product-quantity').value = quantity + 1;
-    updateTotal();
-}
+//  function increaseQuantity() {
+//     var quantity = parseInt(document.getElementById('product-quantity').value);
+//     document.getElementById('product-quantity').value = quantity + 1;
+//     updateTotal();
+// }
 
-function decreaseQuantity() {
-    var quantity = parseInt(document.getElementById('product-quantity').value);
-    if (quantity > 1) {
-        document.getElementById('product-quantity').value = quantity - 1;
-        updateTotal();
-    }
-}
+// function decreaseQuantity() {
+//     var quantity = parseInt(document.getElementById('product-quantity').value);
+//     if (quantity > 1) {
+//         document.getElementById('product-quantity').value = quantity - 1;
+//         updateTotal();
+//     }
+// }
 
-function updateTotal() {
-    var price = parseFloat(document.getElementById('product-price').textContent);
-    var quantity = parseInt(document.getElementById('product-quantity').value);
-    document.getElementById('product-total-price').textContent = (price * quantity).toFixed(2);
-}
+// function updateTotal() {
+//     var price = parseFloat(document.getElementById('product-price').textContent);
+//     var quantity = parseInt(document.getElementById('product-quantity').value);
+//     document.getElementById('product-total-price').textContent = (price * quantity).toFixed(2);
+// }
 
-document.addEventListener('DOMContentLoaded', function() {
-    $('#cartModal').on('shown.bs.modal', function () {
-        updateTotal(); // Автоматическое обновление итоговой цены при отображении модального окна
-    });
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//     $('#cartModal').on('shown.bs.modal', function () {
+//         updateTotal(); // Автоматическое обновление итоговой цены при отображении модального окна
+//     });
+// });
 
-</script> -->
+</script>
 
 </body>
 </html>

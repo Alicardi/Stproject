@@ -13,6 +13,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.http import require_POST
+from .forms import CheckoutForm
 # from .cart import Cart
 from decimal import Decimal
 import logging
@@ -277,3 +278,17 @@ class Cart:
             })
         return items
 
+def checkout(request):
+    form = CheckoutForm()  # Создайте экземпляр формы
+    return render(request, 'main/checkout.html', {'form': form})
+
+def process_checkout(request):
+    if request.method == 'POST':
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            # Обработка данных формы
+            return redirect('order_success')
+        else:
+            return render(request, 'main/checkout.html', {'form': form})
+    else:
+        return redirect('checkout')
