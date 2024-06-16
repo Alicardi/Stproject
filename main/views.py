@@ -1,4 +1,4 @@
-from .models import Product, Category, GalleryImage, Cart, CartItem, Order
+from .models import Product, Category, GalleryImage, Cart, CartItem, Order, OrderItem
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -289,6 +289,7 @@ def process_checkout(request):
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
+            # Создание заказа из данных формы
             order = Order(
                 user=request.user,
                 address=form.cleaned_data['address'],
@@ -297,21 +298,37 @@ def process_checkout(request):
                 country=form.cleaned_data['country']
             )
             order.save()
-
+            
             # Перенос товаров из корзины в заказ
-            cart_items = CartItem.objects.filter(cart__user=request.user)
-            for item in cart_items:
-                # Здесь вы можете создать элементы заказа из элементов корзины
-                # Например:
-                # OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity, price=item.product.price)
-                item.delete()  # Очистка корзины после оформления заказа
+            cart = Cart(request)
+            total_price = 0
+            for item_id, item_data in cart.cart.items():
+                product = Product.objects.get(id=item_id)
+                order_item = OrderItem(
+                    order=order,
+                    product=product,
+                    price=product.price,
+                    quantity=item_data['quantity']
+                )
+                order_item.save()
+                total_price += product.price * item_data['quantity']
+            
+            # Обновление общей цены заказа
+            order.total_price = total_price
+            order.save()
 
-            return redirect('order_history')  # Перенаправление на страницу успешного оформления заказа
+            # Очистка корзины
+            cart.clear()
+            
+            return redirect('order_history')
         else:
+            # Если форма невалидна, возвращаемся на страницу оформления заказа с ошибками
             return render(request, 'main/checkout.html', {'form': form})
     else:
-        return redirect('checkout')
+        # Если это не POST запрос, то инициализируем пустую форму
+        form = CheckoutForm()
 
+    return render(request, 'main/checkout.html', {'form': form})
     
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')

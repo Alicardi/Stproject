@@ -62,15 +62,23 @@ class Order(models.Model):
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)  # Добавлено поле для автоматического обновления времени
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Добавлено поле для общей стоимости
-
+    updated_at = models.DateTimeField(auto_now=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     STATUS_CHOICES = [
         ('pending', 'Ожидает обработки'),
         ('completed', 'Выполнен'),
         ('cancelled', 'Отменен')
     ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')  # Добавлено поле статуса
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product.name}"
