@@ -56,12 +56,21 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=250)
     city = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  # Добавлено поле для автоматического обновления времени
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Добавлено поле для общей стоимости
+
+    STATUS_CHOICES = [
+        ('pending', 'Ожидает обработки'),
+        ('completed', 'Выполнен'),
+        ('cancelled', 'Отменен')
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')  # Добавлено поле статуса
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
