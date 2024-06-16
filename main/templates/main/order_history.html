@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>История заказов</h2>
+    <ul>
+    {% for order in orders %}
+        <li>Заказ №{{ order.id }} от {{ order.created_at }} - {{ order.address }}, {{ order.city }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

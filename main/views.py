@@ -1,4 +1,4 @@
-from .models import Product, Category, GalleryImage, Cart, CartItem
+from .models import Product, Category, GalleryImage, Cart, CartItem, Order
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -286,9 +286,20 @@ def process_checkout(request):
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
-            # Обработка данных формы
+            order = Order(
+                user=request.user,
+                address=form.cleaned_data['address'],
+                city=form.cleaned_data['city'],
+                postal_code=form.cleaned_data['postal_code'],
+                country=form.cleaned_data['country']
+            )
+            order.save()
             return redirect('order_success')
         else:
             return render(request, 'main/checkout.html', {'form': form})
     else:
         return redirect('checkout')
+    
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'main/order_history.html', {'orders': orders})

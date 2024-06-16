@@ -41,3 +41,41 @@
 .checkout button:hover {
     background-color: #0056b3;
 }
+
+
+/* Для оформления */
+.container {
+    max-width: 600px; /* Ограничиваем ширину контейнера */
+    margin: auto; /* Выравниваем контейнер по центру */
+    padding: 20px;
+    background-color: #f8f9fa; /* Цвет фона */
+    border: 1px solid #dee2e6; /* Граница вокруг контейнера */
+    border-radius: 5px; /* Скругление углов */
+}
+
+h2 {
+    color: #343a40; /* Цвет заголовка */
+    text-align: center; /* Выравнивание заголовка по центру */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, button {
+    margin: 10px 0; /* Отступы вокруг полей ввода и кнопок */
+    padding: 10px;
+    border-radius: 5px; /* Скругление углов полей ввода и кнопок */
+}
+
+button {
+    background-color: #007bff; /* Цвет фона кнопки */
+    color: white; /* Цвет текста кнопки */
+    cursor: pointer; /* Форма курсора при наведении на кнопку */
+    border: none; /* Убрать стандартную рамку кнопки */
+}
+
+button:hover {
+    background-color: #0056b3; /* Цвет фона кнопки при наведении */
+}
