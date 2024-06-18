@@ -16,8 +16,8 @@
                 </div>
             </div>                     
             <div>
-                <button onclick="changeQuantity('{{ item.product.id }}', -1)">-</button>
-                <button onclick="changeQuantity('{{ item.product.id }}', 1)">+</button>
+                <!-- <button onclick="changeQuantity('{{ item.product.id }}', -1)">-</button> -->
+                <!-- <button onclick="changeQuantity('{{ item.product.id }}', 1)">+</button> -->
                 <form action="{% url 'remove_from_cart' item.product.id %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-small btn-danger">Удалить</button>
