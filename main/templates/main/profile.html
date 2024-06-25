@@ -12,6 +12,9 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Проверить заказы</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="appointments-tab" data-bs-toggle="tab" data-bs-target="#appointments" type="button" role="tab" aria-controls="appointments" aria-selected="false">Мои записи</button>
+        </li>        
     </ul>
     <div class="tab-content" id="profileTabsContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -71,9 +74,19 @@
                 <ul class="list-group">
                 {% for order in orders %}
                     <li class="list-group-item">
-                        Заказ №{{ order.id }} от {{ order.created_at|date:"d M Y H:i" }} - {{ order.address }}, {{ order.city }}
+                        Заказ №{{ order.id }} от {{ order.created_at|date:"d M Y H:i" }}
                         <br>
-                        Статус: <strong>{{ order.status }}</strong>
+                        Статус: <strong>{{ order.get_status_display }}</strong>
+                        <br>
+                        <div class="order-items-row">
+                            {% for item in order.items.all %}
+                            <div class="order-item">
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 50px;">
+                                {{ item.product.name }} - {{ item.quantity }} шт.
+                            </div>
+                            {% endfor %}
+                        </div>
+                        Итоговая сумма: {{ order.total_price }} руб.
                     </li>
                 {% endfor %}
                 </ul>
@@ -81,8 +94,27 @@
                 <p>У вас пока нет заказов.</p>
                 {% endif %}
             </div>
+        </div>           
+        <div class="tab-pane fade" id="appointments" role="tabpanel" aria-labelledby="appointments-tab">
+            <div class="container mt-3">
+                <h2>Мои записи</h2>
+                {% if appointments %}
+                    <ul class="list-group">
+                    {% for appointment in appointments %}
+                        <li class="list-group-item">
+                            Запись на дату: {{ appointment.date }} в {{ appointment.time }}
+                            <br>
+                            Услуга: <strong>{{ appointment.service }}</strong>
+                            <br>
+                            Статус: <strong>{{ appointment.get_status_display }}</strong>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>У вас пока нет записей.</p>
+                {% endif %}
+            </div>
         </div>
-        
     </div>
 </div>
 {% endblock %}

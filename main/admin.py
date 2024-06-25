@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, ProductImage, GalleryImage, Order, OrderItem
-
+from .models import Product, Category, ProductImage, GalleryImage, Order, OrderItem, Appointment
 admin.site.register(Category)
 admin.site.register(Product)
 admin.site.register(ProductImage)
@@ -18,3 +17,10 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'address', 'postal_code', 'city', 'country', 'created_at', 'updated_at', 'total_price', 'status']
     list_filter = ['created_at', 'updated_at', 'status']
     inlines = [OrderItemInline]
+
+class AppointmentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'date', 'time', 'service', 'status')
+    search_fields = ('user__username', 'service', 'status')
+    list_filter = ('date', 'status')
+
+admin.site.register(Appointment, AppointmentAdmin)

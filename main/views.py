@@ -1,4 +1,4 @@
-from .models import Product, Category, GalleryImage, Cart, CartItem, Order, OrderItem
+from .models import Product, Category, GalleryImage, Cart, CartItem, Order, OrderItem, Appointment
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
@@ -16,6 +16,8 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from .forms import CheckoutForm
+from django.views.decorators.csrf import csrf_exempt
+import json
 # from .cart import Cart
 from decimal import Decimal
 import logging
@@ -107,8 +109,15 @@ def logout_view(request):
 
 def profile_view(request):
     if not request.user.is_authenticated:
-        return redirect('username')
-    return render(request, 'main/profile.html')
+        return redirect('login')  # Перенаправление на страницу входа, если пользователь не авторизован
+
+    # Загрузка истории заказов пользователя
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Загрузка записей пользователя
+    appointments = Appointment.objects.filter(user=request.user).order_by('-date', '-time')  # Предполагаем, что есть поля date и time
+
+    return render(request, 'main/profile.html', {'orders': orders, 'appointments': appointments})
 
 def send_verification_email(user, request):
     token = default_token_generator.make_token(user)
@@ -320,7 +329,7 @@ def process_checkout(request):
             # Очистка корзины
             cart.clear()
             
-            return redirect('order_history')
+            return redirect('profile')
         else:
             # Если форма невалидна, возвращаемся на страницу оформления заказа с ошибками
             return render(request, 'main/checkout.html', {'form': form})
@@ -329,7 +338,27 @@ def process_checkout(request):
         form = CheckoutForm()
 
     return render(request, 'main/checkout.html', {'form': form})
+
+@csrf_exempt
+def book_appointment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        date = data.get('date')
+        time = data.get('time')
+        user = request.user
+        
+        if not user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated'}, status=401)
+        
+        if date and time:
+            appointment = Appointment.objects.create(
+                user=user,
+                date=date,
+                time=time,
+                service='Сеанс загара'  # Или любая другая услуга по умолчанию
+            )
+            return JsonResponse({'success': 'Appointment booked successfully'})
+        else:
+            return JsonResponse({'error': 'Invalid data'}, status=400)
     
-def order_history(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'main/order_history.html', {'orders': orders})
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

@@ -82,3 +82,19 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} of {self.product.name}"
+    
+class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('confirmed', 'Подтверждено'),
+        ('pending', 'Ожидается'),
+        ('cancelled', 'Отменено'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="appointments")
+    date = models.DateField()
+    time = models.TimeField()
+    service = models.CharField(max_length=100)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"{self.service} on {self.date} at {self.time} for {self.user.username}"

@@ -56,6 +56,20 @@
         <!-- Содержимое страницы здесь -->
     {% endblock %}
     <!-- </div> -->
+
+    <!-- Кнопка для открытия календаря -->
+    <button id="calendarButton" onclick="openCalendarModal()">📅 Запись</button>
+
+    <!-- Модальное окно для календаря -->
+    <div id="calendarModal" class="booking-modal" style="display:none;">
+        <div class="booking-modal-content">
+            <span class="booking-close-button" onclick="closeModal('calendarModal')">×</span>
+            <h2>Выберите дату и время</h2>
+            <input type="date" id="bookingDate">
+            <input type="time" id="bookingTime">
+            <button onclick="submitBooking()">Подтвердить</button>
+        </div>
+    </div>
 </main>
 
 <!-- Модальное окно для входа -->
@@ -88,48 +102,7 @@
             <div id="signupError" class="alert alert-danger d-none"></div> 
         </form>
     </div>
-</div>
-
-<!-- Модальное окно
-<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cartModalLabel">Товар добавлен в корзину</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="" alt="Товар" id="product-image" class="img-fluid">
-                    </div>
-                    <div class="col-md-8">
-                        <p><strong>Название товара:</strong> <span id="product-name"></span></p>
-                        <p><strong>Цена:</strong> <span id="product-price"></span> руб.</p>
-                        <div class="quantity d-flex align-items-center">
-                            <button class="btn btn-outline-secondary" onclick="decreaseQuantity()">-</button>
-                            <input type="text" id="product-quantity" value="1" class="form-control text-center" style="flex: 0 0 60px;">
-                            <button class="btn btn-outline-secondary" onclick="increaseQuantity()">+</button>
-                        </div>
-                        <div class="total d-flex justify-content-end">
-                            <p class="mt-3"><strong>Итого:</strong> <span id="product-total-price"></span> руб.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Продолжить покупки</button>
-                <a href="/cart/" class="btn btn-primary">Перейти в корзину</a>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-
-
-  
+</div> 
 
 {% include 'main/footer.html' %}
 
@@ -142,10 +115,13 @@
 <script>
     function openModal(modalId) {
         var modal = document.getElementById(modalId);
-        var blurBackground = document.createElement('div');
-        blurBackground.classList.add('blur-background');
-        document.body.appendChild(blurBackground);
-        
+        var existingBackground = document.querySelector('.blur-background');
+        if (!existingBackground) {
+            var blurBackground = document.createElement('div');
+            blurBackground.classList.add('blur-background');
+            document.body.appendChild(blurBackground);
+        }
+
         modal.style.display = "block";
     }
 
@@ -285,6 +261,68 @@
 // });
 
 </script>
+<script>
+    function openCalendarModal() {
+        var modal = document.getElementById('calendarModal');
+        var existingBackground = document.querySelector('.blur-background');
+        if (!existingBackground) {
+            var blurBackground = document.createElement('div');
+            blurBackground.classList.add('blur-background');
+            document.body.appendChild(blurBackground);
+        }
+        modal.style.display = 'block';
+    }
 
+    function submitBooking() {
+        var date = document.getElementById('bookingDate').value;
+        var time = document.getElementById('bookingTime').value;
+        console.log('Booking for: ' + date + ' at ' + time); // Для проверки в консоли
+
+        fetch('/api/book_appointment/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken() // Получение CSRF токена, если нужно
+            },
+            body: JSON.stringify({
+                date: date,
+                time: time
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Запись успешно добавлена');
+                closeModal('calendarModal'); // Закрыть модальное окно после успешной отправки
+                // Можете добавить обновление интерфейса или перезагрузку страницы, если нужно
+            } else {
+                return response.json().then(data => { throw new Error(data.error) });
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+        }
+
+
+
+
+    window.onscroll = function() {
+    var button = document.getElementById("calendarButton");
+    var footerHeight = document.querySelector("footer").offsetHeight; 
+    var windowHeight = window.innerHeight;
+    var scrollPosition = window.pageYOffset;
+    var buttonHeight = button.offsetHeight;
+    var fromBottom = 20; 
+
+    // Рассчитываем высоту от нижней границы окна до нижней границы футера
+    var footerTop = document.body.scrollHeight - footerHeight - scrollPosition;
+    if (footerTop < windowHeight) {
+        button.style.bottom = (windowHeight - footerTop + fromBottom) + "px";
+    } else {
+        button.style.bottom = fromBottom + "px";
+    }
+};
+
+</script>
 </body>
 </html>
