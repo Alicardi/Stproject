@@ -348,7 +348,7 @@ def book_appointment(request):
         user = request.user
         
         if not user.is_authenticated:
-            return JsonResponse({'error': 'User not authenticated'}, status=401)
+            return JsonResponse({'error': 'Пользователь не авторизован'}, status=401)
         
         if date and time:
             appointment = Appointment.objects.create(
@@ -357,8 +357,8 @@ def book_appointment(request):
                 time=time,
                 service='Сеанс загара'  # Или любая другая услуга по умолчанию
             )
-            return JsonResponse({'success': 'Appointment booked successfully'})
+            return JsonResponse({'success': 'Услуга успешно забронирована'})
         else:
-            return JsonResponse({'error': 'Invalid data'}, status=400)
+            return JsonResponse({'error': 'Неверные время или дата'}, status=400)
     
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    return JsonResponse({'error': 'Неверный метод запроса'}, status=405)

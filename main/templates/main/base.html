@@ -9,35 +9,28 @@
         <!-- Наши Css для модельных окон и всего стиля -->
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+
+        <!-- jQuery (некоторые компоненты Bootstrap зависят от этой библиотеки) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        
         <!-- Подключение Swiper CSS -->
         <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
         <!-- Подключение Font Awesome -->
-        
-        
-        
+                   
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-        
-        
+                
         <!-- Подключение Bootstrap CSS и JS с официального CDN -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        
-        
-        
-        
+                          
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         
         
         <!-- Подключение Leaflet CSS без атрибута integrity для устранения ошибок загрузки -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" crossorigin=""/>
         
-        
-        
         <!-- Подключение Swiper JS -->
         <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-        
-        <!-- jQuery (некоторые компоненты Bootstrap зависят от этой библиотеки) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <!-- Css для шапки и подвала -->
         <link rel="stylesheet" href="{% static 'css/header_footer.css' %}">
         <link rel="stylesheet" href="{% static 'css/cart.css' %}">
@@ -103,6 +96,28 @@
         </form>
     </div>
 </div> 
+
+<!-- Модальное окно для оформления заказа -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkoutModalLabel">Оформление заказа</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'process_checkout' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Оформить заказ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% include 'main/footer.html' %}
 
@@ -233,33 +248,6 @@
         });
     });
  
-// изменениe количества
-//  function increaseQuantity() {
-//     var quantity = parseInt(document.getElementById('product-quantity').value);
-//     document.getElementById('product-quantity').value = quantity + 1;
-//     updateTotal();
-// }
-
-// function decreaseQuantity() {
-//     var quantity = parseInt(document.getElementById('product-quantity').value);
-//     if (quantity > 1) {
-//         document.getElementById('product-quantity').value = quantity - 1;
-//         updateTotal();
-//     }
-// }
-
-// function updateTotal() {
-//     var price = parseFloat(document.getElementById('product-price').textContent);
-//     var quantity = parseInt(document.getElementById('product-quantity').value);
-//     document.getElementById('product-total-price').textContent = (price * quantity).toFixed(2);
-// }
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     $('#cartModal').on('shown.bs.modal', function () {
-//         updateTotal(); // Автоматическое обновление итоговой цены при отображении модального окна
-//     });
-// });
-
 </script>
 <script>
     function openCalendarModal() {
@@ -306,7 +294,7 @@
 
 
 
-    window.onscroll = function() {
+window.onscroll = function() {
     var button = document.getElementById("calendarButton");
     var footerHeight = document.querySelector("footer").offsetHeight; 
     var windowHeight = window.innerHeight;
@@ -321,6 +309,16 @@
     } else {
         button.style.bottom = fromBottom + "px";
     }
+};
+
+// Обновление позиции кнопки при изменении размера окна
+window.onresize = function() {
+    window.onscroll();
+};
+
+// Первоначальное расположение кнопки
+window.onload = function() {
+    window.onscroll();
 };
 
 </script>

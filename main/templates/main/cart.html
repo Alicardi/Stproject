@@ -14,10 +14,8 @@
                     <h5>{{ item.product.name }}</h5>
                     <p id="quantity-{{ item.product.id }}">{{ item.quantity }} x {{ item.product.price }} руб.</p>
                 </div>
-            </div>                     
+            </div>
             <div>
-                <!-- <button onclick="changeQuantity('{{ item.product.id }}', -1)">-</button> -->
-                <!-- <button onclick="changeQuantity('{{ item.product.id }}', 1)">+</button> -->
                 <form action="{% url 'remove_from_cart' item.product.id %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-small btn-danger">Удалить</button>
@@ -28,13 +26,21 @@
         <p>Ваша корзина пуста.</p>
         {% endfor %}
     </div>
-    <div class="total d-flex justify-content-end mt-3">
-        <p id="quantity-{{ item.product.id }}">{{ item.quantity }}</p>
-        <h4 id="total-price">Итого: {{ total_price }} руб.</h4>
-    </div>
     <div class="checkout mt-2">
-        <button class="btn btn-primary" onclick="location.href='{% url 'checkout' %}'">Перейти к оформлению</button>
+        <button class="btn btn-primary" id="toggleOrderForm">Перейти к оформлению</button>
     </div>
+    
+    <div id="orderFormContainer" style="display:none;">
+        <!-- Форма оформления заказа здесь -->
+        <form action="{% url 'process_checkout' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Фамилия Имя Отчество" required>
+            <input type="text" name="address" placeholder="Адрес доставки" required>
+            <input type="tel" name="phone" placeholder="Номер телефона" required>
+            <button type="submit" class="btn btn-primary">Оформить заказ</button>
+        </form>
+    </div>
+
 </div>
 
 <script>
@@ -71,10 +77,21 @@ document.addEventListener('DOMContentLoaded', function () {
 function getCsrfToken() {
     return document.querySelector('[name=csrfmiddlewaretoken]').value;
 }
-
-document.querySelector('.btn-primary').addEventListener('click', function() {
-    this.innerHTML = "Перенаправление..."; // Меняет текст кнопки при клике
-    // Здесь может быть код для обработки данных корзины перед перенаправлением
-});
 </script>
+
+<script>
+    document.getElementById('toggleOrderForm').addEventListener('click', function() {
+        // Скрываем кнопку перехода к оформлению
+        this.style.display = 'none';
+    
+        // Скрываем все кнопки "Удалить"
+        document.querySelectorAll('.btn-danger').forEach(function(button) {
+            button.style.display = 'none';
+        });
+    
+        // Отображаем контейнер для формы
+        document.getElementById('orderFormContainer').style.display = 'block';
+    });
+    </script>
+    
 {% endblock %}
